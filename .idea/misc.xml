@@ -3,8 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/ADMIN/AndroidStudioProjects/FieldMapView2/app/src/main/res/layout/activity_main.xml" value="0.1793478260869565" />
+        <entry key="..\:/Users/ADMIN/AndroidStudioProjects/FieldMapView2/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2703125" />
+        <entry key="..\:/Users/ADMIN/AndroidStudioProjects/FieldMapView2/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Users/ADMIN/AndroidStudioProjects/FieldMapView2/app/src/main/res/layout/content_main.xml" value="0.2477355072463768" />
         <entry key="..\:/Users/ADMIN/AndroidStudioProjects/FieldMapView2/app/src/main/res/layout/fragment_map.xml" value="0.1793478260869565" />
+        <entry key="..\:/Users/ADMIN/AndroidStudioProjects/FieldMapView2/app/src/main/res/layout/info.xml" value="0.2477355072463768" />
+        <entry key="..\:/Users/ADMIN/AndroidStudioProjects/FieldMapView2/app/src/main/res/layout/item_info.xml" value="0.2477355072463768" />
+        <entry key="..\:/Users/ADMIN/AndroidStudioProjects/FieldMapView2/app/src/main/res/menu/menu_album.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/ADMIN/AndroidStudioProjects/FieldMapView2/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2703125" />
+        <entry key="..\:/Users/ADMIN/AndroidStudioProjects/FieldMapView2/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.2703125" />
+        <entry key="..\:/Users/ADMIN/AndroidStudioProjects/FieldMapView2/app/src/main/res/xml/infor.xml" value="0.2477355072463768" />
       </map>
     </option>
   </component>

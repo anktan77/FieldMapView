@@ -13,7 +13,7 @@
         android:theme="@style/Theme.FieldMapView">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyB1rpsplEv5e4S7hiVy39bemgnRCs_hLY8"/>
+            android:value="AIzaSyB1rpsplEv5e4S7hiVy39bemgnRCs_hLY8 "/>
         <activity
             android:name=".MainActivity"
             android:exported="true">
