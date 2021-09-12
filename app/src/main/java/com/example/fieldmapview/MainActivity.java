@@ -38,6 +38,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ///////////////////////////////////
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {
             checkLocationPermission();
@@ -77,7 +79,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
+        fusedLocationProviderClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        LatLng latLng = new LatLng(location.getLatitude() , location.getLongitude());
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13.0f));
+                        if (location != null) {
+                            // Logic to handle location object
+                        }
+                    }
+                });
         ////////////////////////////////////////////////////
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -85,13 +98,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         recyclerView.setLayoutManager(layoutManager);
         albumList = new ArrayList<>();
         adapter = new AlbumsAdapter(this, albumList);
-
-//        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
-//        recyclerView.setLayoutManager(mLayoutManager);
-//        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
-//        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-        prepareAlbums();
+//        prepareAlbums();
     }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -136,89 +144,53 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         adapter.notifyDataSetChanged();
     }
 
-    /**
-     * RecyclerView item decoration - give equal margin around grid item
-     */
-    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-
-        private int spanCount;
-        private int spacing;
-        private boolean includeEdge;
-
-        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
-            this.spanCount = spanCount;
-            this.spacing = spacing;
-            this.includeEdge = includeEdge;
-        }
-
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view); // item position
-            int column = position % spanCount; // item column
-
-            if (includeEdge) {
-                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
-
-                if (position < spanCount) { // top edge
-                    outRect.top = spacing;
-                }
-                outRect.bottom = spacing; // item bottom
-            } else {
-                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
-                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-                if (position >= spanCount) {
-                    outRect.top = spacing; // item top
-                }
-            }
-        }
-    }
-
-    /**
-     * Converting dp to pixel
-     */
-    private int dpToPx(int dp) {
-        Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
-    }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
+        LatLng anyWhere = new LatLng(50,50);
+        LatLng anyWhere1 = new LatLng(49,30);
+        mMap.addMarker(new MarkerOptions().position(anyWhere).title("m2"));
+        mMap.addMarker(new MarkerOptions().position(anyWhere1).title("m2"));
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             bulidGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
+
     }
-
-
-
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         lastlocation = location;
+        ////////////
+        LatLng anyWhere = new LatLng(50, 50);
+        Album a = new Album("True Romance", 13, 1);
+            if (albumList.contains(a)){
+                return;
+            }
+            else {
+                if (mMap.getProjection().getVisibleRegion().latLngBounds.contains(anyWhere) == true) { //kiểm tra chứa vị trị khi move camera
+                    albumList.add(a);
+                    adapter.notifyDataSetChanged();
+                } else {
+                    albumList.clear();
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        //////////////////        ///////////////////
         if(currentLocationMarker != null){
             currentLocationMarker.remove();
         }
-
-        Log.d("lat = ",""+latitude);
-        LatLng latLng = new LatLng(location.getLatitude() , location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        markerOptions.title("Current Location");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-        currentLocationMarker = mMap.addMarker(markerOptions);
-
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13.0f));
 
         if(client != null)
         {
             LocationServices.FusedLocationApi.removeLocationUpdates(client,this::onLocationChanged);
         }
+
     }
 
     @Override
